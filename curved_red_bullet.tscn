@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://jkqatikh7k13"]
+
+[ext_resource type="Texture2D" uid="uid://bauweandh5toa" path="res://Assets/Projectiles/Bullet.png" id="2_cgqtx"]
+
+[sub_resource type="GDScript" id="GDScript_f3rk3"]
+script/source = "extends Area2D
+
+
+@onready var anim = $AnimatedSprite2D
+@export var speed = 500
+var timer = 300
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	anim.play(\"default\")
+
+
+func _process(delta):
+	position += transform.x * speed * delta
+	rotation += deg_to_rad(30 * delta)
+	timer -= 60 * delta
+	if timer <= 0:
+		queue_free()
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lt8w0"]
+atlas = ExtResource("2_cgqtx")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fp6k6"]
+atlas = ExtResource("2_cgqtx")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gb1ha"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lt8w0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fp6k6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_075hr"]
+radius = 13.0
+
+[node name="RedBullet" type="Area2D" groups=["enemyProjectile"]]
+script = SubResource("GDScript_f3rk3")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_gb1ha")
+frame = 1
+frame_progress = 0.729257
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
+shape = SubResource("CircleShape2D_075hr")

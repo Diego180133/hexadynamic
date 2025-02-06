@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://dvbnhvgg8y6pf"]
+
+[ext_resource type="Script" path="res://Bullet.gd" id="1_n4gsf"]
+[ext_resource type="Texture2D" uid="uid://kh2b2cadn387" path="res://Assets/Projectiles/FriendlyBullet.png" id="2_fci3f"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_446kb"]
+atlas = ExtResource("2_fci3f")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fgo55"]
+atlas = ExtResource("2_fci3f")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fxgau"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_446kb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fgo55")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oh734"]
+radius = 14.0357
+
+[node name="FriendlyBullet" type="Area2D" groups=["playerProjectile"]]
+collision_layer = 4
+collision_mask = 18
+script = ExtResource("1_n4gsf")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.490196)
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_fxgau")
+frame_progress = 0.902076
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["playerProjectile"]]
+texture_filter = 1
+shape = SubResource("CircleShape2D_oh734")

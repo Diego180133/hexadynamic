@@ -1,0 +1,216 @@
+[gd_scene load_steps=21 format=3 uid="uid://cklnhwj3m7fci"]
+
+[ext_resource type="Script" path="res://wall_hitbox.gd" id="1_2okoy"]
+[ext_resource type="Script" path="res://Assasin.gd" id="1_6uqwv"]
+[ext_resource type="Script" path="res://boss_hitbox.gd" id="1_mufdk"]
+[ext_resource type="Script" path="res://Player.gd" id="1_mx5lq"]
+[ext_resource type="PackedScene" uid="uid://dvbnhvgg8y6pf" path="res://friendly_bullet.tscn" id="2_6gpct"]
+[ext_resource type="PackedScene" uid="uid://bi6dep84ir1yg" path="res://red_bullet.tscn" id="2_arhal"]
+[ext_resource type="Script" path="res://RegularPolygonCreator.gd" id="3_hv2pa"]
+[ext_resource type="Script" path="res://collisionpolygon2d.gd" id="3_rwtel"]
+[ext_resource type="Script" path="res://player_hitbox.gd" id="6_q8e2u"]
+[ext_resource type="Script" path="res://health_bar.gd" id="7_r1ibo"]
+[ext_resource type="Texture2D" uid="uid://v40id4l2cnin" path="res://Assets/PlayerHitbox.png" id="9_ns06j"]
+[ext_resource type="Script" path="res://Energy.gd" id="10_6ny6l"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_40doy"]
+size = Vector2(40, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hy8fw"]
+size = Vector2(12, 12.1088)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxotv"]
+bg_color = Color(0.41598, 0.41598, 0.41598, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_05ov3"]
+bg_color = Color(0, 1, 0.278431, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iscer"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8t4bv"]
+bg_color = Color(1, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37jon"]
+bg_color = Color(6.54578e-06, 0.644681, 0.917506, 1)
+
+[sub_resource type="Environment" id="Environment_a68ge"]
+background_mode = 3
+glow_enabled = true
+glow_levels/3 = 1.26
+glow_levels/5 = 0.54
+glow_intensity = 0.55
+glow_bloom = 0.04
+glow_blend_mode = 1
+glow_hdr_threshold = 0.13
+
+[node name="Main" type="Node2D"]
+
+[node name="Background2" type="Polygon2D" parent="."]
+position = Vector2(0, -3.99994)
+scale = Vector2(1, 0.982081)
+color = Color(0.162066, 0.162066, 0.162066, 1)
+polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 1050, 50, 1050)
+
+[node name="Background1" type="Polygon2D" parent="." groups=["boss"]]
+position = Vector2(-1, 1)
+scale = Vector2(1, 0.991)
+color = Color(0, 0, 0, 1)
+invert_enabled = true
+polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 1030, 50, 1030)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Background1"]
+position = Vector2(-1877, -425.832)
+scale = Vector2(1, 0.991)
+collision_layer = 15
+collision_mask = 15
+
+[node name="WallCollission" type="CollisionPolygon2D" parent="Background1/StaticBody2D"]
+position = Vector2(1878, 428.682)
+scale = Vector2(1, 1.01825)
+polygon = PackedVector2Array(50, 60, 1860, 60, 1860, 1020, 60, 1019, 60, 60, 50, 60, 49, 1030, 1878, 1030, 1869, 49, 50, 50)
+
+[node name="WallHitbox" type="Area2D" parent="Background1" groups=["boss"]]
+script = ExtResource("1_2okoy")
+
+[node name="WallCollission" type="CollisionPolygon2D" parent="Background1/WallHitbox"]
+scale = Vector2(1, 1.01825)
+polygon = PackedVector2Array(-5, 60.4508, 1858, 60.4508, 1859, 1007.84, 67, 1003.88, 63, 59.4598, -3, 59.4598, -1, 1080.19, 1936, 1075.23, 1924, 0, -6, -2.97299)
+
+[node name="Boss" type="CharacterBody2D" parent="." groups=["boss"]]
+position = Vector2(960, 540)
+collision_layer = 2
+script = ExtResource("1_6uqwv")
+Bullet = ExtResource("2_arhal")
+Health = 5000
+
+[node name="Hitbox" type="Area2D" parent="Boss" groups=["boss"]]
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("1_mufdk")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boss/Hitbox"]
+script = ExtResource("3_rwtel")
+n = 3
+r = 50
+
+[node name="Polygon2D2" type="Polygon2D" parent="Boss"]
+color = Color(0, 0, 0, 1)
+script = ExtResource("3_hv2pa")
+n = 3
+r = 60
+
+[node name="Polygon2D" type="Polygon2D" parent="Boss/Polygon2D2"]
+color = Color(0.894118, 0, 0.537255, 1)
+script = ExtResource("3_hv2pa")
+n = 3
+r = 50
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Boss"]
+script = ExtResource("3_rwtel")
+n = 3
+r = 50
+
+[node name="AttackTimer1" type="Timer" parent="Boss"]
+autostart = true
+
+[node name="AttackTimer2" type="Timer" parent="Boss"]
+wait_time = 0.666
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+position = Vector2(1400, 540)
+motion_mode = 1
+script = ExtResource("1_mx5lq")
+Attack = ExtResource("2_6gpct")
+
+[node name="PlayerBorder" type="Polygon2D" parent="Player"]
+position = Vector2(-15, -15)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(-5, -5, 35, -5, 35, 35, -5, 35)
+
+[node name="PlayerInside" type="Polygon2D" parent="Player/PlayerBorder"]
+color = Color(0.466667, 1, 1, 1)
+polygon = PackedVector2Array(0, 0, 30, 0, 30, 30, 0, 30)
+
+[node name="PlayerCollision" type="CollisionShape2D" parent="Player"]
+shape = SubResource("RectangleShape2D_40doy")
+
+[node name="PlayerHitbox" type="Area2D" parent="Player" groups=["player"]]
+scale = Vector2(1, 0.991)
+collision_layer = 7
+collision_mask = 7
+script = ExtResource("6_q8e2u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/PlayerHitbox"]
+position = Vector2(0, 6.10352e-05)
+shape = SubResource("RectangleShape2D_hy8fw")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("9_ns06j")
+
+[node name="Wall1" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 60, 50, 60)
+
+[node name="Wall2" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(1860, 50, 1870, 50, 1870, 1030, 1860, 1030)
+
+[node name="Wall3" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 50, 60, 50, 60, 1030, 50, 1030)
+
+[node name="Wall4" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 1020, 1870, 1020, 1870, 1030, 50, 1030)
+
+[node name="PlayerHealth" type="ProgressBar" parent="."]
+offset_left = 72.0
+offset_top = 21.0
+offset_right = 472.0
+offset_bottom = 33.0
+theme_override_styles/background = SubResource("StyleBoxFlat_lxotv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_05ov3")
+value = 100.0
+show_percentage = false
+script = ExtResource("7_r1ibo")
+
+[node name="BossHealth" type="ProgressBar" parent="."]
+offset_left = 570.0
+offset_top = 980.0
+offset_right = 1350.0
+offset_bottom = 996.0
+theme_override_styles/background = SubResource("StyleBoxFlat_iscer")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8t4bv")
+max_value = 10000.0
+value = 100.0
+show_percentage = false
+script = ExtResource("7_r1ibo")
+
+[node name="ENBar" type="ProgressBar" parent="."]
+offset_left = 501.0
+offset_top = 21.0
+offset_right = 901.0
+offset_bottom = 33.0
+theme_override_styles/background = SubResource("StyleBoxFlat_lxotv")
+theme_override_styles/fill = SubResource("StyleBoxFlat_37jon")
+max_value = 400.0
+value = 100.0
+show_percentage = false
+script = ExtResource("10_6ny6l")
+
+[node name="Polygon2D" type="Polygon2D" parent="ENBar"]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
+
+[node name="Polygon2D2" type="Polygon2D" parent="ENBar"]
+position = Vector2(100, 0)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
+
+[node name="Polygon2D3" type="Polygon2D" parent="ENBar"]
+position = Vector2(200, 0)
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_a68ge")
+
+[connection signal="timeout" from="Boss/AttackTimer1" to="Boss" method="_on_attack_timer_1_timeout"]
+[connection signal="timeout" from="Boss/AttackTimer2" to="Boss" method="_on_attack_timer_2_timeout"]

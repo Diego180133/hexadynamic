@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cklnhwj3m7fci"]
+
+[ext_resource type="Script" path="res://background_1.gd" id="1_8qi6w"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Background1" type="Polygon2D" parent="."]
+position = Vector2(-38, -101)
+scale = Vector2(0.975495, 1)
+color = Color(0, 0, 0, 1)
+invert_enabled = true
+polygon = PackedVector2Array(70.7333, 122, 1874.95, 131, 1944.65, 1134, 114.814, 1067)
+script = ExtResource("1_8qi6w")

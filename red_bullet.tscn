@@ -1,0 +1,43 @@
+[gd_scene load_steps=8 format=3 uid="uid://bi6dep84ir1yg"]
+
+[ext_resource type="Script" path="res://Bullet.gd" id="1_p7yok"]
+[ext_resource type="Texture2D" uid="uid://bauweandh5toa" path="res://Assets/Projectiles/Bullet.png" id="2_ytifd"]
+[ext_resource type="Script" path="res://BulletTimer.gd" id="3_wsee1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lt8w0"]
+atlas = ExtResource("2_ytifd")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fp6k6"]
+atlas = ExtResource("2_ytifd")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gb1ha"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lt8w0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fp6k6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_075hr"]
+radius = 14.0
+
+[node name="RedBullet" type="Area2D" groups=["enemyProjectile"]]
+script = ExtResource("1_p7yok")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_gb1ha")
+frame = 1
+frame_progress = 0.729257
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
+shape = SubResource("CircleShape2D_075hr")
+script = ExtResource("3_wsee1")
