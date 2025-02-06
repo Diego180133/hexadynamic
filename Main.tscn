@@ -1,6 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://cs5oiq1x3k0wj"]
+[gd_scene load_steps=22 format=3 uid="uid://cs5oiq1x3k0wj"]
 
 [ext_resource type="Script" path="res://wall_hitbox.gd" id="1_8ypco"]
+[ext_resource type="Script" path="res://main.gd" id="1_t5yli"]
 [ext_resource type="Script" path="res://Assasin.gd" id="2_io4e7"]
 [ext_resource type="PackedScene" uid="uid://bi6dep84ir1yg" path="res://red_bullet.tscn" id="3_uby1e"]
 [ext_resource type="Script" path="res://boss_hitbox.gd" id="4_h7g7r"]
@@ -45,6 +46,7 @@ glow_blend_mode = 1
 glow_hdr_threshold = 0.13
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_t5yli")
 
 [node name="Background2" type="Polygon2D" parent="."]
 position = Vector2(0, -3.99994)
