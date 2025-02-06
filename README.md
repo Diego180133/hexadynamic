@@ -1,3 +1,3 @@
 # hexadynamic
 
-Haxadynamic game this is
+Haxadynamic game this ishoy 
