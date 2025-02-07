@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cs5oiq1x3k0wj"]
+[gd_scene load_steps=24 format=3 uid="uid://cs5oiq1x3k0wj"]
 
 [ext_resource type="Script" path="res://wall_hitbox.gd" id="1_8ypco"]
 [ext_resource type="Script" path="res://main.gd" id="1_t5yli"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://dvbnhvgg8y6pf" path="res://friendly_bullet.tscn" id="8_uqv35"]
 [ext_resource type="Script" path="res://player_hitbox.gd" id="9_tgdmk"]
 [ext_resource type="Texture2D" uid="uid://v40id4l2cnin" path="res://Assets/PlayerHitbox.png" id="10_l1x1p"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="11_d23xy"]
 [ext_resource type="Script" path="res://health_bar.gd" id="11_qgxxr"]
 [ext_resource type="Script" path="res://Energy.gd" id="12_0j8vk"]
 
@@ -19,6 +20,9 @@ size = Vector2(40, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hy8fw"]
 size = Vector2(12, 12.1088)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4x8jo"]
+shader = ExtResource("11_d23xy")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxotv"]
 bg_color = Color(0.41598, 0.41598, 0.41598, 1)
@@ -142,6 +146,7 @@ position = Vector2(0, 6.10352e-05)
 shape = SubResource("RectangleShape2D_hy8fw")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
+material = SubResource("ShaderMaterial_4x8jo")
 texture = ExtResource("10_l1x1p")
 
 [node name="Wall1" type="Polygon2D" parent="."]
