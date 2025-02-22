@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvbnhvgg8y6pf"]
 
-[ext_resource type="Script" path="res://Bullet.gd" id="1_n4gsf"]
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_n4gsf"]
 [ext_resource type="Texture2D" uid="uid://kh2b2cadn387" path="res://Assets/Projectiles/FriendlyBullet.png" id="2_fci3f"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_446kb"]
@@ -34,7 +34,7 @@ collision_mask = 18
 script = ExtResource("1_n4gsf")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-modulate = Color(1, 1, 1, 0.490196)
+modulate = Color(1, 1, 1, 0.392157)
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_fxgau")
 frame_progress = 0.902076

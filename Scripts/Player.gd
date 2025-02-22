@@ -69,7 +69,6 @@ func PlayerMovement(delta):
 		velocity = MaxSpeed * input
 		dashCooldown = 30
 		energy -= 100
-		print(health)
 	
 	if dashCooldown > 0:
 		dashCooldown -= 60 * delta
@@ -95,7 +94,7 @@ func playerAttack(delta):
 		var newAttack = Attack.instantiate() as Node2D
 		get_tree().current_scene.add_child(newAttack)
 		newAttack.bulletType = 1
-		newAttack.speed = 500
+		newAttack.speed = 1000
 		newAttack.global_position = global_position
 		newAttack.look_at(get_global_mouse_position())
 		attackCooldown = 10
