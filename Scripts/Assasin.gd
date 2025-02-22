@@ -2,17 +2,22 @@ extends CharacterBody2D
 
 @onready var HealthBar = $"../BossHealth"
 @onready var Player = $"../Player"
+@onready var BossPolygon = $Polygon2DOutline/Polygon2D
 @export var Bullet: PackedScene
 @export var Health = 10000
 var angle := 0.0
 var attackAmount := 5
 var currentComboAttack := 0
 var actionTimer := 0.0
+var actionTimer2 := 0.0
 var attackTimer := 0.0
 var animTimer := 0.0
 var ComboString = []
 var newAttack := true
 var rotationStorage := 0.0
+var slowDown := false
+var bulletRotation := 0.0
+var intensity := 0.0
 
 func _ready():
 	HealthBar.healthbar(Health)
@@ -33,13 +38,15 @@ func _process(delta):
 			Attack2(delta)
 		3:
 			Attack3(delta)
+		4: 
+			Attack4(delta)
 
 func comboBuild():
 	ComboString = []
 	currentComboAttack = 0
 	attackAmount = RandomNumberGenerator.new().randi_range(4,6)
 	for i in range(attackAmount):
-		ComboString.append(RandomNumberGenerator.new().randi_range(1,3))
+		ComboString.append(RandomNumberGenerator.new().randi_range(1,4))
 	ComboString[attackAmount - 1] = 11
 	print(ComboString)
 	attackTimer = 300
@@ -54,7 +61,7 @@ func _area_entered():
 
 func Attack1(delta):
 	if newAttack == true:
-		attackTimer = 300
+		attackTimer = 60
 		actionTimer = 0
 		newAttack = false
 		
@@ -80,10 +87,11 @@ func Attack1(delta):
 			newBullet.angle = angle
 			newBullet.displace = (PI*i)/12
 			newBullet.rotSpeed = -0.25
-		actionTimer = 60
+		actionTimer = 1000
 			
 	if attackTimer <= 0:
 		currentComboAttack += 1
+		actionTimer = 1000
 		newAttack = true
 		
 	actionTimer -= 60 * delta
@@ -92,8 +100,8 @@ func Attack1(delta):
 func Attack2(delta):
 	
 	if newAttack == true:
-		attackTimer = 300
-		actionTimer = 0
+		attackTimer = 120
+		actionTimer = 30
 		newAttack = false
 	
 	look_at(Player.position)
@@ -103,17 +111,20 @@ func Attack2(delta):
 		var newBullet = Bullet.instantiate() as Node2D
 		get_tree().current_scene.add_child(newBullet)
 		newBullet.bulletType = 3
-		newBullet.velocity = Vector2(300,0)
+		newBullet.rotation = rotation
+		newBullet.velocity = Vector2(500,0)
 		newBullet.global_position = global_position
 		newBullet.look_at(Player.position)
-		newBullet.timer = 1500
+		newBullet.timer = 450
 		
 		actionTimer = 60
 		
 	if attackTimer <= 0:
 		currentComboAttack += 1
 		attackTimer = 300
+		actionTimer = 1000
 		newAttack = true
+		velocity = Vector2(0,0)
 	
 	actionTimer -= 60 * delta
 	attackTimer -= 60 * delta
@@ -151,10 +162,62 @@ func Attack3(delta):
 		currentComboAttack += 1
 		attackTimer = 300
 		newAttack = true
+		actionTimer = 1000
 	
 	actionTimer -= 60 * delta
 	attackTimer -= 60 * delta
 	animTimer -= 60 * delta
+
+func Attack4(delta):
+	
+	if newAttack == true:
+		intensity = 0
+		attackTimer = 120
+		actionTimer = 90
+		actionTimer2 = 93
+		newAttack = false
+		slowDown = false
+		bulletRotation = 90
+
+	if actionTimer > 0 && actionTimer < 100:
+		intensity = (0.7/1.5 * delta)
+		print(intensity)
+		BossPolygon.material.set_shader_parameter("intensity", intensity)
+		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (2000)))
+		
+	
+	if actionTimer <= 0:
+		intensity = 0
+		BossPolygon.material.set_shader_parameter("intensity", intensity)
+		actionTimer = 10000
+		velocity = transform.x*3000
+		slowDown = true
+	
+	if actionTimer2 <= 0:
+		bulletRotation = -bulletRotation
+		var newBullet = Bullet.instantiate() as Node2D
+		get_tree().current_scene.add_child(newBullet)
+		newBullet.bulletType = 4
+		newBullet.global_position = global_position
+		newBullet.speed = 0
+		newBullet.rotation = rotation
+		newBullet.rotate(deg_to_rad(bulletRotation))
+		actionTimer2 = 3
+		
+	if slowDown == true:
+		velocity -= (2 * velocity * delta)
+		
+	if attackTimer <= 0:
+		currentComboAttack += 1
+		attackTimer = 300
+		actionTimer = 1000
+		velocity = Vector2(0,0)
+		newAttack = true
+		slowDown = false
+	
+	actionTimer -= 60 * delta
+	attackTimer -= 60 * delta
+	actionTimer2 -= 60 * delta
 
 func cooldown(delta):
 	pass

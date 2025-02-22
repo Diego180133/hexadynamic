@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://bi6dep84ir1yg"]
 
-[ext_resource type="Script" path="res://Bullet.gd" id="1_p7yok"]
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_p7yok"]
 [ext_resource type="Texture2D" uid="uid://bauweandh5toa" path="res://Assets/Projectiles/Bullet.png" id="2_ytifd"]
-[ext_resource type="Script" path="res://BulletTimer.gd" id="3_wsee1"]
+[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="3_wsee1"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_lt8w0"]
 atlas = ExtResource("2_ytifd")
@@ -30,6 +30,7 @@ animations = [{
 radius = 14.0
 
 [node name="RedBullet" type="Area2D" groups=["enemyProjectile"]]
+position = Vector2(-20, -20)
 script = ExtResource("1_p7yok")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
