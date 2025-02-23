@@ -18,6 +18,7 @@ var rotationStorage := 0.0
 var slowDown := false
 var bulletRotation := 0.0
 var intensity := 0.0
+var loop := 0
 
 func _ready():
 	HealthBar.healthbar(Health)
@@ -73,6 +74,7 @@ func Attack1(delta):
 		for i in 24:
 			var newBullet = Bullet.instantiate() as Node2D
 			get_tree().current_scene.add_child(newBullet)
+			newBullet.bulletGroup = 1
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
@@ -82,6 +84,7 @@ func Attack1(delta):
 				
 			newBullet = Bullet.instantiate() as Node2D
 			get_tree().current_scene.add_child(newBullet)
+			newBullet.bulletGroup = 1
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
@@ -110,6 +113,7 @@ func Attack2(delta):
 	if actionTimer <= 0:
 		var newBullet = Bullet.instantiate() as Node2D
 		get_tree().current_scene.add_child(newBullet)
+		newBullet.bulletGroup = 1
 		newBullet.bulletType = 3
 		newBullet.rotation = rotation
 		newBullet.velocity = Vector2(500,0)
@@ -131,11 +135,12 @@ func Attack2(delta):
 
 func Attack3(delta):
 	if newAttack == true:
-		attackTimer = 180
+		attackTimer = 120
 		actionTimer = 120
 		animTimer = 120
 		rotationStorage = 0
 		newAttack = false
+		loop = 1
 		look_at(Player.position)
 	
 
@@ -151,18 +156,25 @@ func Attack3(delta):
 	if actionTimer <= 0:
 		var newBullet = Bullet.instantiate() as Node2D
 		get_tree().current_scene.add_child(newBullet)
-		newBullet.bulletType = 1
+		newBullet.bulletGroup = 3
+		newBullet.bulletType = 5
 		newBullet.global_position = global_position
-		newBullet.speed = 2500
-		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))
+		newBullet.speed = 750
+		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed))/3)
 		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))		
 		actionTimer = 10000
 		
 	if attackTimer <= 0:
-		currentComboAttack += 1
-		attackTimer = 300
-		newAttack = true
-		actionTimer = 1000
+		if loop > 0:
+			attackTimer = 120
+			actionTimer = 60
+			animTimer = 60
+			loop -= 1
+		else:
+			currentComboAttack += 1
+			attackTimer = 300
+			newAttack = true
+			actionTimer = 1000
 	
 	actionTimer -= 60 * delta
 	attackTimer -= 60 * delta
@@ -171,17 +183,17 @@ func Attack3(delta):
 func Attack4(delta):
 	
 	if newAttack == true:
+		BossPolygon.material.set_shader_parameter("attack_color", Vector4(255,0,255,0))
 		intensity = 0
 		attackTimer = 120
 		actionTimer = 90
-		actionTimer2 = 93
+		actionTimer2 = 92
 		newAttack = false
 		slowDown = false
 		bulletRotation = 90
 
 	if actionTimer > 0 && actionTimer < 100:
-		intensity = (0.7/1.5 * delta)
-		print(intensity)
+		intensity += (0.7/1.5 * delta)
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
 		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (2000)))
 		
@@ -197,12 +209,13 @@ func Attack4(delta):
 		bulletRotation = -bulletRotation
 		var newBullet = Bullet.instantiate() as Node2D
 		get_tree().current_scene.add_child(newBullet)
+		newBullet.bulletGroup = 1
 		newBullet.bulletType = 4
 		newBullet.global_position = global_position
 		newBullet.speed = 0
 		newBullet.rotation = rotation
 		newBullet.rotate(deg_to_rad(bulletRotation))
-		actionTimer2 = 3
+		actionTimer2 = 2
 		
 	if slowDown == true:
 		velocity -= (2 * velocity * delta)

@@ -1,20 +1,20 @@
-[gd_scene load_steps=10 format=3 uid="uid://bi6dep84ir1yg"]
+[gd_scene load_steps=10 format=3 uid="uid://cmb750g7qtc1x"]
 
-[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_p7yok"]
-[ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_bxmbv"]
-[ext_resource type="Texture2D" uid="uid://dx6fxl1ltoyu" path="res://Assets/Projectiles/ColorlessBullet.png" id="2_drraf"]
-[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="3_wsee1"]
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_v2hra"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_8snbe"]
+[ext_resource type="Texture2D" uid="uid://dx6fxl1ltoyu" path="res://Assets/Projectiles/ColorlessBullet.png" id="3_wvis3"]
+[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_b2dfx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7ri0r"]
-shader = ExtResource("2_bxmbv")
+shader = ExtResource("2_8snbe")
 shader_parameter/colorShade = Color(0.543102, 0.00392304, 0.99608, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ekwrn"]
-atlas = ExtResource("2_drraf")
+atlas = ExtResource("3_wvis3")
 region = Rect2(0, 0, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vdbkt"]
-atlas = ExtResource("2_drraf")
+atlas = ExtResource("3_wvis3")
 region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_gb1ha"]
@@ -34,9 +34,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_075hr"]
 radius = 14.0
 
-[node name="Bullet" type="Area2D" groups=["enemyProjectile"]]
+[node name="Bullet" type="Area2D"]
 position = Vector2(-20, -20)
-script = ExtResource("1_p7yok")
+script = ExtResource("1_v2hra")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -47,4 +47,4 @@ frame_progress = 0.729897
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
 visible = false
 shape = SubResource("CircleShape2D_075hr")
-script = ExtResource("3_wsee1")
+script = ExtResource("4_b2dfx")

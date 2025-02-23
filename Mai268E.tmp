@@ -1,8 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://cs5oiq1x3k0wj"]
+[gd_scene load_steps=26 format=3 uid="uid://cs5oiq1x3k0wj"]
 
 [ext_resource type="Script" path="res://Scripts/wall_hitbox.gd" id="1_8ypco"]
 [ext_resource type="Script" path="res://Scripts/main.gd" id="1_t5yli"]
-[ext_resource type="Script" path="res://wall_hitbox.gd" id="2_ei7k8"]
 [ext_resource type="Script" path="res://Scripts/Assasin.gd" id="2_io4e7"]
 [ext_resource type="PackedScene" uid="uid://bi6dep84ir1yg" path="res://Scenes/red_bullet.tscn" id="3_uby1e"]
 [ext_resource type="Script" path="res://Scripts/boss_hitbox.gd" id="4_h7g7r"]
@@ -83,16 +82,9 @@ scale = Vector2(1, 1.01825)
 polygon = PackedVector2Array(50, 60, 1860, 60, 1860, 1020, 60, 1019, 60, 60, 50, 60, 49, 1030, 1878, 1030, 1869, 49, 50, 50)
 
 [node name="WallHitbox" type="Area2D" parent="Background1" groups=["boss"]]
-script = ExtResource("2_ei7k8")
-
-[node name="WallCollission" type="CollisionPolygon2D" parent="Background1/WallHitbox"]
-scale = Vector2(1, 1.01825)
-polygon = PackedVector2Array(-77, 53.5138, 1868, 63.4237, 1860, 1008.83, 61, 1010.82, 61, 58.4688, -84, 50.5408, -20, 1087.12, 1966, 1113.88, 1954, 980.095, 1943, -51.5318, -84, -88.1987)
-
-[node name="OuterHitbox" type="Area2D" parent="Background1" groups=["boss"]]
 script = ExtResource("1_8ypco")
 
-[node name="WallCollission" type="CollisionPolygon2D" parent="Background1/OuterHitbox"]
+[node name="WallCollission" type="CollisionPolygon2D" parent="Background1/WallHitbox"]
 scale = Vector2(1, 1.01825)
 polygon = PackedVector2Array(-391, -426.128, 2406, -393.425, 2506, 1383.43, -500, 1426.04, -410, -831.446, -981, -812.617, -933, 1756.05, 2858, 1779.83, 2849, -983.068, -377, -831.446)
 

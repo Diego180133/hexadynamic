@@ -32,6 +32,7 @@ playerProjectile=""
 player=""
 boss=""
 enemyProjectile=""
+WallCollide=""
 
 [input]
 
