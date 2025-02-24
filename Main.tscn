@@ -1,7 +1,6 @@
-[gd_scene load_steps=27 format=3 uid="uid://cs5oiq1x3k0wj"]
+[gd_scene load_steps=26 format=3 uid="uid://cs5oiq1x3k0wj"]
 
 [ext_resource type="Script" path="res://Scripts/wall_hitbox.gd" id="1_8ypco"]
-[ext_resource type="Script" path="res://Scripts/main.gd" id="1_t5yli"]
 [ext_resource type="Script" path="res://wall_hitbox.gd" id="2_ei7k8"]
 [ext_resource type="Script" path="res://Scripts/Assasin.gd" id="2_io4e7"]
 [ext_resource type="PackedScene" uid="uid://bi6dep84ir1yg" path="res://Scenes/red_bullet.tscn" id="3_uby1e"]
@@ -16,6 +15,20 @@
 [ext_resource type="Shader" path="res://PlayerShader.gdshader" id="11_cqfj8"]
 [ext_resource type="Script" path="res://Scripts/health_bar.gd" id="11_qgxxr"]
 [ext_resource type="Script" path="res://Scripts/Energy.gd" id="12_0j8vk"]
+
+[sub_resource type="GDScript" id="GDScript_rpclx"]
+script/source = "extends Node2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+"
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_v8rrj"]
 shader = ExtResource("8_8enan")
@@ -35,11 +48,6 @@ size = Vector2(40, 40)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hy8fw"]
 size = Vector2(12, 12.1088)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_vaio7"]
-shader = ExtResource("11_cqfj8")
-shader_parameter/flash_color = Color(1, 1, 1, 1)
-shader_parameter/flash_opacity = null
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lxotv"]
 bg_color = Color(0.41598, 0.41598, 0.41598, 1)
 
@@ -56,7 +64,7 @@ bg_color = Color(1, 0, 0, 1)
 bg_color = Color(6.54578e-06, 0.644681, 0.917506, 1)
 
 [node name="Main" type="Node2D"]
-script = ExtResource("1_t5yli")
+script = SubResource("GDScript_rpclx")
 
 [node name="Background2" type="Polygon2D" parent="."]
 position = Vector2(0, -3.99994)
@@ -64,7 +72,7 @@ scale = Vector2(1, 0.982081)
 color = Color(0.162066, 0.162066, 0.162066, 1)
 polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 1050, 50, 1050)
 
-[node name="Background1" type="Polygon2D" parent="." groups=["boss"]]
+[node name="Background1" type="Polygon2D" parent="."]
 position = Vector2(-1, 1)
 scale = Vector2(1, 0.991)
 color = Color(0, 0, 0, 1)
@@ -82,14 +90,14 @@ position = Vector2(1878, 428.682)
 scale = Vector2(1, 1.01825)
 polygon = PackedVector2Array(50, 60, 1860, 60, 1860, 1020, 60, 1019, 60, 60, 50, 60, 49, 1030, 1878, 1030, 1869, 49, 50, 50)
 
-[node name="WallHitbox" type="Area2D" parent="Background1" groups=["boss"]]
+[node name="WallHitbox" type="Area2D" parent="Background1"]
 script = ExtResource("2_ei7k8")
 
 [node name="WallCollission" type="CollisionPolygon2D" parent="Background1/WallHitbox"]
 scale = Vector2(1, 1.01825)
-polygon = PackedVector2Array(-77, 53.5138, 1868, 63.4237, 1860, 1008.83, 61, 1010.82, 61, 58.4688, -84, 50.5408, -20, 1087.12, 1966, 1113.88, 1954, 980.095, 1943, -51.5318, -84, -88.1987)
+polygon = PackedVector2Array(-81, 57.4778, 1861, 58.4688, 1861, 1009.83, 61, 1010.82, 61, 58.4688, -80, 58.4688, -20, 1087.12, 1966, 1113.88, 1954, 980.095, 1943, -51.5318, -84, -88.1987)
 
-[node name="OuterHitbox" type="Area2D" parent="Background1" groups=["boss"]]
+[node name="OuterHitbox" type="Area2D" parent="Background1"]
 script = ExtResource("1_8ypco")
 
 [node name="WallCollission" type="CollisionPolygon2D" parent="Background1/OuterHitbox"]
@@ -163,7 +171,6 @@ position = Vector2(0, 6.10352e-05)
 shape = SubResource("RectangleShape2D_hy8fw")
 
 [node name="HitboxSprite" type="Sprite2D" parent="Player"]
-material = SubResource("ShaderMaterial_vaio7")
 texture = ExtResource("10_l1x1p")
 
 [node name="Wall1" type="Polygon2D" parent="."]

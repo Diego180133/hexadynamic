@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1qr3j5arp116"]
+
+[ext_resource type="Script" path="res://Scripts/explosion_particles.gd" id="1_o0wwp"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hekug"]
+particles_animation = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+material = SubResource("CanvasItemMaterial_hekug")
+position = Vector2(-20, -20)
+emitting = false
+amount = 32
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 0.41
+local_coords = true
+particle_flag_align_y = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 100.0
+initial_velocity_max = 500.0
+linear_accel_min = -500.0
+linear_accel_max = -500.0
+scale_amount_min = 10.0
+scale_amount_max = 13.0
+color = Color(1, 0, 1, 1)
+anim_speed_max = 128.0
+script = ExtResource("1_o0wwp")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

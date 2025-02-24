@@ -1,13 +1,108 @@
 [gd_scene load_steps=10 format=3 uid="uid://cmb750g7qtc1x"]
 
-[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_v2hra"]
 [ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_8snbe"]
 [ext_resource type="Texture2D" uid="uid://dx6fxl1ltoyu" path="res://Assets/Projectiles/ColorlessBullet.png" id="3_wvis3"]
 [ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_b2dfx"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ri0r"]
+[sub_resource type="GDScript" id="GDScript_dmkow"]
+script/source = "extends Area2D
+
+@onready var Sprite = $AnimatedSprite2D
+var speed = 1000
+var rotSpeed := 0.5
+var rSpeed := 5
+var initPos: Vector2
+var radius := 0.0
+var d := 0.0
+var displace := 0.0
+var angle := 0.0
+var bulletType := 0
+var velocity:Vector2 
+var torsion_speed:= 0.04
+var timer = 100
+var colorShade = Vector4(138,0,254,0.4)
+var bulletGroup = 0
+var collided_with_wall = false
+var spawnRotation = 0
+
+func _ready():
+	Sprite.play(\"default\")
+
+func _physics_process(delta):
+	
+	d += delta
+	
+	match bulletGroup:
+		
+		1:
+			add_to_group(\"enemyProjectile\")
+		2:
+			add_to_group(\"playerProjectile\")
+			colorShade = Vector4(1,1,0,0.4)
+		3:
+			add_to_group(\"WallCollide\")
+			add_to_group(\"enemyProjectile\")
+		
+	if bulletGroup != 0:
+		bulletGroup = 0
+		
+	Sprite.material.set_shader_parameter(\"colorShade\", colorShade)
+	
+	match bulletType:
+		
+		#Direct
+		1:
+			position += transform.x * speed * delta
+			
+		#Orbit
+		2:
+			position = Vector2((sin(d * rotSpeed + angle + displace)) * radius,
+			 (cos(d * rotSpeed + angle + displace)) * radius
+			) + initPos
+		
+			radius += rSpeed
+			
+		#tracking
+		3:
+			var playerPosition:Vector2 = get_tree().get_first_node_in_group(\"player\").position
+			var vectorToPlayer:Vector2 = (playerPosition - position).normalized()
+			velocity = velocity.rotated(torsion_speed * velocity.angle_to(vectorToPlayer))
+			position += velocity * delta
+			timer -= 60 * delta
+			if timer <= 0:
+				queue_free()
+			
+		#linear speed up
+		4:
+			position += transform.x * speed * delta
+			speed += 120 * delta
+			
+		#Spawns more bullets
+		5:
+			colorShade = Vector4(1,0,0,0.4)
+			scale = Vector2(3,3)
+			position += transform.x * speed * delta
+			if collided_with_wall == true:
+				for i in 24:
+					var newBullet = (load(\"res://Scenes/bullet.tscn\") as PackedScene).instantiate()
+					get_tree().current_scene.add_child(newBullet)
+					newBullet.bulletGroup = 1
+					newBullet.bulletType = 2
+					newBullet.initPos = global_position
+					newBullet.angle = angle
+					newBullet.displace = (PI*i)/12
+					newBullet.rotSpeed = 0.25
+					newBullet.rSpeed = 8
+				var Explosion = (load(\"res://Scenes/ExplosionParticles.tscn\") as PackedScene).instantiate()
+				get_tree().current_scene.add_child(Explosion)
+				Explosion.global_position = global_position
+				queue_free()
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vcmgc"]
+resource_local_to_scene = true
 shader = ExtResource("2_8snbe")
-shader_parameter/colorShade = Color(0.543102, 0.00392304, 0.99608, 1)
+shader_parameter/colorShade = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ekwrn"]
 atlas = ExtResource("3_wvis3")
@@ -17,7 +112,7 @@ region = Rect2(0, 0, 32, 32)
 atlas = ExtResource("3_wvis3")
 region = Rect2(0, 32, 32, 32)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_gb1ha"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_cp7ha"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -36,13 +131,12 @@ radius = 14.0
 
 [node name="Bullet" type="Area2D"]
 position = Vector2(-20, -20)
-script = ExtResource("1_v2hra")
+script = SubResource("GDScript_dmkow")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-material = SubResource("ShaderMaterial_7ri0r")
-sprite_frames = SubResource("SpriteFrames_gb1ha")
-frame_progress = 0.729897
+material = SubResource("ShaderMaterial_vcmgc")
+sprite_frames = SubResource("SpriteFrames_cp7ha")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
 visible = false

@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://c50b6xycq220o"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_o58vn"]
+
+[sub_resource type="GDScript" id="GDScript_1cryl"]
+script/source = "extends CPUParticles2D
+
+func _ready():
+	emitting = true
+
+func _process(delta):
+	global_position = get_tree().get_first_node_in_group(\"boss\").global_position
+	
+func _on_timer_timeout():
+	queue_free()
+"
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+material = SubResource("CanvasItemMaterial_o58vn")
+emitting = false
+amount = 50
+lifetime = 0.4
+one_shot = true
+randomness = 0.2
+emission_shape = 1
+emission_sphere_radius = 51.33
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 20.0
+scale_amount_min = 7.0
+scale_amount_max = 10.0
+color = Color(0.815686, 0, 1, 1)
+script = SubResource("GDScript_1cryl")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

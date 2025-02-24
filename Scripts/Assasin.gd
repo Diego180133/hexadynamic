@@ -19,6 +19,7 @@ var slowDown := false
 var bulletRotation := 0.0
 var intensity := 0.0
 var loop := 0
+var spawnRotation = 90
 
 func _ready():
 	HealthBar.healthbar(Health)
@@ -67,7 +68,7 @@ func Attack1(delta):
 		newAttack = false
 		
 	look_at(Player.position)
-	velocity = Vector2(0,0)
+	velocity = transform.x*100
 		
 	if actionTimer <= 0:
 		angle += PI / 24
@@ -103,7 +104,7 @@ func Attack1(delta):
 func Attack2(delta):
 	
 	if newAttack == true:
-		attackTimer = 120
+		attackTimer = 40
 		actionTimer = 30
 		newAttack = false
 	
@@ -111,16 +112,19 @@ func Attack2(delta):
 	velocity = transform.x*100
 	
 	if actionTimer <= 0:
-		var newBullet = Bullet.instantiate() as Node2D
-		get_tree().current_scene.add_child(newBullet)
-		newBullet.bulletGroup = 1
-		newBullet.bulletType = 3
-		newBullet.rotation = rotation
-		newBullet.velocity = Vector2(500,0)
-		newBullet.global_position = global_position
-		newBullet.look_at(Player.position)
-		newBullet.timer = 450
-		
+		spawnRotation = 90
+		for i in 2:
+			var newBullet = Bullet.instantiate() as Node2D
+			get_tree().current_scene.add_child(newBullet)
+			newBullet.bulletGroup = 1
+			newBullet.bulletType = 3
+			newBullet.speed = 400
+			newBullet.spawnRotation = spawnRotation
+			newBullet.velocity = newBullet.speed * global_position.direction_to(Player.global_position)
+			newBullet.velocity = newBullet.velocity.rotated(deg_to_rad(newBullet.spawnRotation))
+			spawnRotation += 180
+			newBullet.global_position = global_position
+			newBullet.timer = 450
 		actionTimer = 60
 		
 	if attackTimer <= 0:
@@ -154,14 +158,14 @@ func Attack3(delta):
 		rotate(rotationStorage)
 	
 	if actionTimer <= 0:
-		var newBullet = Bullet.instantiate() as Node2D
-		get_tree().current_scene.add_child(newBullet)
-		newBullet.bulletGroup = 3
-		newBullet.bulletType = 5
-		newBullet.global_position = global_position
-		newBullet.speed = 750
-		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed))/3)
-		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))		
+		var newBigBullet = Bullet.instantiate() as Node2D
+		get_tree().current_scene.add_child(newBigBullet)
+		newBigBullet.bulletGroup = 3
+		newBigBullet.bulletType = 5
+		newBigBullet.global_position = global_position
+		newBigBullet.speed = 750
+		newBigBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBigBullet.speed))/3)
+		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBigBullet.speed)))
 		actionTimer = 10000
 		
 	if attackTimer <= 0:
@@ -202,9 +206,12 @@ func Attack4(delta):
 		intensity = 0
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
 		actionTimer = 10000
+		var Particles = (load("res://Scenes/DashingParticles.tscn") as PackedScene).instantiate()
+		get_tree().current_scene.add_child(Particles)
+		Particles.global_position = global_position
 		velocity = transform.x*3000
 		slowDown = true
-	
+		
 	if actionTimer2 <= 0:
 		bulletRotation = -bulletRotation
 		var newBullet = Bullet.instantiate() as Node2D

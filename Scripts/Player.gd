@@ -7,7 +7,7 @@ extends CharacterBody2D
 @export var MaxHealth = 100
 @export var energy = 400
 @export var energyRegen = 45
-@export var healthRegen = 5
+@export var healthRegen = 3
 
 var health = 0
 var accel = 400

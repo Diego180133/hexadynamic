@@ -3,24 +3,23 @@ extends Area2D
 @onready var Sprite = $AnimatedSprite2D
 var speed = 1000
 var rotSpeed := 0.5
-var rSpeed := 4
+var rSpeed := 5
 var initPos: Vector2
 var radius := 0.0
 var d := 0.0
 var displace := 0.0
 var angle := 0.0
 var bulletType := 0
-var velocity: Vector2
+var velocity:Vector2 
 var torsion_speed:= 0.04
 var timer = 100
 var colorShade = Vector4(138,0,254,0.4)
 var bulletGroup = 0
 var collided_with_wall = false
+var spawnRotation = 0
 
 func _ready():
 	Sprite.play("default")
-	Sprite.material.set_shader_parameter("colorShade", colorShade)
-
 
 func _physics_process(delta):
 	
@@ -32,11 +31,15 @@ func _physics_process(delta):
 			add_to_group("enemyProjectile")
 		2:
 			add_to_group("playerProjectile")
+			colorShade = Vector4(1,1,0,0.4)
 		3:
 			add_to_group("WallCollide")
 			add_to_group("enemyProjectile")
-			
-	bulletGroup = 0
+		
+	if bulletGroup != 0:
+		bulletGroup = 0
+		
+	Sprite.material.set_shader_parameter("colorShade", colorShade)
 	
 	match bulletType:
 		
@@ -82,5 +85,7 @@ func _physics_process(delta):
 					newBullet.displace = (PI*i)/12
 					newBullet.rotSpeed = 0.25
 					newBullet.rSpeed = 8
+				var Explosion = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
+				get_tree().current_scene.add_child(Explosion)
+				Explosion.global_position = global_position
 				queue_free()
-				collided_with_wall = false

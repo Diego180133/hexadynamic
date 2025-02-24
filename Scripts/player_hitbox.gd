@@ -44,4 +44,3 @@ func _flash():
 	flashing = true
 	flashOpacity = 0.7
 	PlayerInside.material.set_shader_parameter("flash_opacity", flashOpacity)
-	Hitbox.material.set_shader_parameter("flash_opacity", flashOpacity)
