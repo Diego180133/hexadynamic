@@ -13,13 +13,17 @@ var bulletType := 0
 var velocity:Vector2 
 var torsion_speed:= 0.04
 var timer = 100
-var colorShade = Vector4(138,0,254,0.4)
+var colorShade = Vector4(1,0,1,0.4)
 var bulletGroup = 0
 var collided_with_wall = false
 var spawnRotation = 0
+var dark = false
 
 func _ready():
-	Sprite.play("default")
+	if dark == true:
+		Sprite.play("dark_purple")
+	else:
+		Sprite.play("default")
 
 func _physics_process(delta):
 	
@@ -29,9 +33,6 @@ func _physics_process(delta):
 		
 		1:
 			add_to_group("enemyProjectile")
-		2:
-			add_to_group("playerProjectile")
-			colorShade = Vector4(1,1,0,0.4)
 		3:
 			add_to_group("WallCollide")
 			add_to_group("enemyProjectile")
@@ -88,4 +89,6 @@ func _physics_process(delta):
 				var Explosion = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
 				get_tree().current_scene.add_child(Explosion)
 				Explosion.global_position = global_position
-				queue_free()
+	
+	if collided_with_wall == true:
+		queue_free()

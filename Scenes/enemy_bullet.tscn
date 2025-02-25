@@ -1,0 +1,70 @@
+[gd_scene load_steps=13 format=3 uid="uid://c0s160oninsg5"]
+
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_3ru2h"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_6a106"]
+[ext_resource type="Texture2D" uid="uid://kplqpujsldma" path="res://Assets/Projectiles/DarkBullet.png" id="3_qucen"]
+[ext_resource type="Texture2D" uid="uid://dx6fxl1ltoyu" path="res://Assets/Projectiles/ColorlessBullet.png" id="3_r572s"]
+[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_jtygf"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7ri0r"]
+shader = ExtResource("2_6a106")
+shader_parameter/colorShade = Color(0.543102, 0.00392304, 0.99608, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vsyxq"]
+atlas = ExtResource("3_qucen")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_253j7"]
+atlas = ExtResource("3_qucen")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ekwrn"]
+atlas = ExtResource("3_r572s")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdbkt"]
+atlas = ExtResource("3_r572s")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gb1ha"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vsyxq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_253j7")
+}],
+"loop": true,
+"name": &"dark_purple",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ekwrn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vdbkt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_075hr"]
+radius = 14.0
+
+[node name="Bullet" type="Area2D" groups=["enemyProjectile"]]
+position = Vector2(-20, -20)
+script = ExtResource("1_3ru2h")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_7ri0r")
+sprite_frames = SubResource("SpriteFrames_gb1ha")
+animation = &"dark_purple"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
+visible = false
+shape = SubResource("CircleShape2D_075hr")
+script = ExtResource("4_jtygf")

@@ -66,6 +66,15 @@ func PlayerMovement(delta):
 		
 	if Input.is_action_just_pressed("Dash") and energy >= 100:
 		MaxSpeed = 3100
+		var Particles = (load("res://Scenes/DashingParticles.tscn") as PackedScene).instantiate()
+		Particles.waitTime = 0.3
+		Particles.lifeTime = 0.15
+		Particles.amount_ = 20
+		Particles.colorValue = Color(0.5,1,1,0.5)
+		Particles.radius = 20
+		get_tree().current_scene.add_child(Particles)
+		Particles.global_position = global_position
+		Particles.parent = "player"
 		velocity = MaxSpeed * input
 		dashCooldown = 30
 		energy -= 100

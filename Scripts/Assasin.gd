@@ -116,7 +116,7 @@ func Attack2(delta):
 		for i in 2:
 			var newBullet = Bullet.instantiate() as Node2D
 			get_tree().current_scene.add_child(newBullet)
-			newBullet.bulletGroup = 1
+			newBullet.bulletGroup = 3
 			newBullet.bulletType = 3
 			newBullet.speed = 400
 			newBullet.spawnRotation = spawnRotation
@@ -158,14 +158,15 @@ func Attack3(delta):
 		rotate(rotationStorage)
 	
 	if actionTimer <= 0:
-		var newBigBullet = Bullet.instantiate() as Node2D
-		get_tree().current_scene.add_child(newBigBullet)
-		newBigBullet.bulletGroup = 3
-		newBigBullet.bulletType = 5
-		newBigBullet.global_position = global_position
-		newBigBullet.speed = 750
-		newBigBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBigBullet.speed))/3)
-		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBigBullet.speed)))
+		var newBullet = Bullet.instantiate() as Node2D
+		newBullet.dark = true
+		get_tree().current_scene.add_child(newBullet)
+		newBullet.bulletGroup = 3
+		newBullet.bulletType = 5
+		newBullet.global_position = global_position
+		newBullet.speed = 750
+		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed))/3)
+		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))
 		actionTimer = 10000
 		
 	if attackTimer <= 0:
@@ -187,7 +188,7 @@ func Attack3(delta):
 func Attack4(delta):
 	
 	if newAttack == true:
-		BossPolygon.material.set_shader_parameter("attack_color", Vector4(255,0,255,0))
+		BossPolygon.material.set_shader_parameter("attack_color", Vector4(1,0.5,1,0))
 		intensity = 0
 		attackTimer = 120
 		actionTimer = 90
@@ -195,9 +196,16 @@ func Attack4(delta):
 		newAttack = false
 		slowDown = false
 		bulletRotation = 90
+		var Particles = (load("res://Scenes/wave_particle.tscn") as PackedScene).instantiate()
+		Particles.waitTime = 1.5
+		Particles.lifeTime = 0.3
+		Particles.amount_ = 1
+		Particles.colorValue = Color(1,0.3,1,0.3)
+		get_tree().current_scene.add_child(Particles)
+		Particles.global_position = global_position
 
-	if actionTimer > 0 && actionTimer < 100:
-		intensity += (0.7/1.5 * delta)
+	if actionTimer > 10 && actionTimer < 100:
+		intensity += (0.8 * delta)
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
 		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (2000)))
 		
@@ -207,6 +215,11 @@ func Attack4(delta):
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
 		actionTimer = 10000
 		var Particles = (load("res://Scenes/DashingParticles.tscn") as PackedScene).instantiate()
+		Particles.radius = 50
+		Particles.amount_ = 50
+		Particles.waitTime = 1
+		Particles.lifeTime = 0.4
+		Particles.colorValue = Color(0.8,0,1,1)
 		get_tree().current_scene.add_child(Particles)
 		Particles.global_position = global_position
 		velocity = transform.x*3000
@@ -216,7 +229,7 @@ func Attack4(delta):
 		bulletRotation = -bulletRotation
 		var newBullet = Bullet.instantiate() as Node2D
 		get_tree().current_scene.add_child(newBullet)
-		newBullet.bulletGroup = 1
+		newBullet.bulletGroup = 3
 		newBullet.bulletType = 4
 		newBullet.global_position = global_position
 		newBullet.speed = 0

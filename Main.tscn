@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Scripts/wall_hitbox.gd" id="1_8ypco"]
 [ext_resource type="Script" path="res://wall_hitbox.gd" id="2_ei7k8"]
 [ext_resource type="Script" path="res://Scripts/Assasin.gd" id="2_io4e7"]
-[ext_resource type="PackedScene" uid="uid://bi6dep84ir1yg" path="res://Scenes/red_bullet.tscn" id="3_uby1e"]
 [ext_resource type="Script" path="res://Scripts/boss_hitbox.gd" id="4_h7g7r"]
+[ext_resource type="PackedScene" uid="uid://c0s160oninsg5" path="res://Scenes/enemy_bullet.tscn" id="4_qsfqw"]
 [ext_resource type="Script" path="res://Scripts/collisionpolygon2d.gd" id="5_1do8l"]
 [ext_resource type="Script" path="res://Scripts/RegularPolygonCreator.gd" id="6_bcmbr"]
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="7_htyhn"]
@@ -109,7 +109,7 @@ position = Vector2(960, 540)
 collision_layer = 2
 collision_mask = 2
 script = ExtResource("2_io4e7")
-Bullet = ExtResource("3_uby1e")
+Bullet = ExtResource("4_qsfqw")
 Health = 5000
 
 [node name="Hitbox" type="Area2D" parent="Boss" groups=["boss"]]
