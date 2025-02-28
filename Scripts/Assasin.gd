@@ -3,6 +3,7 @@ extends CharacterBody2D
 @onready var HealthBar = $"../BossHealth"
 @onready var Player = $"../Player"
 @onready var BossPolygon = $Polygon2DOutline/Polygon2D
+@onready var BossPolygonOutline = $Polygon2DOutline
 @export var Bullet: PackedScene
 @export var Health = 10000
 var angle := 0.0
@@ -16,10 +17,14 @@ var ComboString = []
 var newAttack := true
 var rotationStorage := 0.0
 var slowDown := false
+var dashSlash = false
 var bulletRotation := 0.0
 var intensity := 0.0
 var loop := 0
 var spawnRotation = 90
+var speed = 0
+var relocatePos:Vector2
+var newAttackAction = true
 
 func _ready():
 	HealthBar.healthbar(Health)
@@ -42,13 +47,15 @@ func _process(delta):
 			Attack3(delta)
 		4: 
 			Attack4(delta)
+		5:
+			Attack5(delta)
 
 func comboBuild():
 	ComboString = []
 	currentComboAttack = 0
 	attackAmount = RandomNumberGenerator.new().randi_range(4,6)
 	for i in range(attackAmount):
-		ComboString.append(RandomNumberGenerator.new().randi_range(1,4))
+		ComboString.append(RandomNumberGenerator.new().randi_range(1,5))
 	ComboString[attackAmount - 1] = 11
 	print(ComboString)
 	attackTimer = 300
@@ -72,14 +79,14 @@ func Attack1(delta):
 		
 	if actionTimer <= 0:
 		angle += PI / 24
-		for i in 24:
+		for i in 20:
 			var newBullet = Bullet.instantiate() as Node2D
 			get_tree().current_scene.add_child(newBullet)
 			newBullet.bulletGroup = 1
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
-			newBullet.displace = (PI*i)/12
+			newBullet.displace = (PI*i)/10
 			newBullet.rotSpeed = 0.25
 				
 				
@@ -89,22 +96,22 @@ func Attack1(delta):
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
-			newBullet.displace = (PI*i)/12
+			newBullet.displace = (PI*i)/10
 			newBullet.rotSpeed = -0.25
 		actionTimer = 1000
 			
 	if attackTimer <= 0:
 		currentComboAttack += 1
 		actionTimer = 1000
+		velocity = Vector2(0,0)
 		newAttack = true
 		
-	actionTimer -= 60 * delta
-	attackTimer -= 60 * delta
+	timers(delta)
 
 func Attack2(delta):
 	
 	if newAttack == true:
-		attackTimer = 40
+		attackTimer = 60
 		actionTimer = 30
 		newAttack = false
 	
@@ -125,7 +132,7 @@ func Attack2(delta):
 			spawnRotation += 180
 			newBullet.global_position = global_position
 			newBullet.timer = 450
-		actionTimer = 60
+		actionTimer = 1000
 		
 	if attackTimer <= 0:
 		currentComboAttack += 1
@@ -134,14 +141,13 @@ func Attack2(delta):
 		newAttack = true
 		velocity = Vector2(0,0)
 	
-	actionTimer -= 60 * delta
-	attackTimer -= 60 * delta
+	timers(delta)
 
 func Attack3(delta):
 	if newAttack == true:
-		attackTimer = 120
-		actionTimer = 120
-		animTimer = 120
+		attackTimer = 90
+		actionTimer = 90
+		animTimer = 90
 		rotationStorage = 0
 		newAttack = false
 		loop = 1
@@ -164,7 +170,6 @@ func Attack3(delta):
 		newBullet.bulletGroup = 3
 		newBullet.bulletType = 5
 		newBullet.global_position = global_position
-		newBullet.speed = 750
 		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed))/3)
 		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))
 		actionTimer = 10000
@@ -181,9 +186,7 @@ func Attack3(delta):
 			newAttack = true
 			actionTimer = 1000
 	
-	actionTimer -= 60 * delta
-	attackTimer -= 60 * delta
-	animTimer -= 60 * delta
+	timers(delta)
 
 func Attack4(delta):
 	
@@ -207,7 +210,7 @@ func Attack4(delta):
 	if actionTimer > 10 && actionTimer < 100:
 		intensity += (0.8 * delta)
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
-		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (2000)))
+		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (1250)))
 		
 	
 	if actionTimer <= 0:
@@ -248,9 +251,85 @@ func Attack4(delta):
 		newAttack = true
 		slowDown = false
 	
-	actionTimer -= 60 * delta
-	attackTimer -= 60 * delta
-	actionTimer2 -= 60 * delta
+	timers(delta)
+
+func Attack5(delta):
+	if newAttack == true:
+		attackTimer = 130
+		actionTimer = 60
+		actionTimer2 = 40
+		newAttack = false
+		newAttackAction = true
+		
+	if actionTimer2 <= 40:
+		BossPolygon.color.a = actionTimer2/40
+		BossPolygonOutline.color.a = actionTimer2/40
+		
+		if newAttackAction == true:
+			var RelocateParticles = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
+			RelocateParticles.color = Color(0,0,0,0.3)
+			RelocateParticles.amount = 100
+			RelocateParticles.explosiveness = 0
+			RelocateParticles.emission_sphere_radius = 30
+			RelocateParticles.initial_velocity_min = -500
+			RelocateParticles.initial_velocity_max = -100
+			get_tree().current_scene.add_child(RelocateParticles)
+			relocatePos = Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (900))
+			RelocateParticles.global_position = relocatePos
+			newAttackAction = false
+		
+		
+	if actionTimer2 <= 0:
+		actionTimer2 = 10000
+		global_position = relocatePos
+		var RelocateParticles2 = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
+		get_tree().current_scene.add_child(RelocateParticles2)
+		RelocateParticles2.color = Color(1,0,1,1)
+		RelocateParticles2.amount = 100
+		RelocateParticles2.initial_velocity_min = 150
+		RelocateParticles2.initial_velocity_max = 600
+		RelocateParticles2.explosiveness = 1
+		RelocateParticles2.lifetime = 1
+		RelocateParticles2.global_position = relocatePos
+		
+	if actionTimer2 > 60:
+		BossPolygonOutline.color.a += 15 * delta
+		BossPolygon.color.a += 15 * delta
+			
+	
+	if actionTimer <= 0:
+		actionTimer = 200
+		speed = 800
+		dashSlash = true
+	
+	if actionTimer >= 100 && actionTimer <= 170:
+		var Slash = (load("res://Scenes/Slash.tscn") as PackedScene).instantiate()
+		get_tree().current_scene.add_child(Slash)
+		Slash.global_position = global_position
+		Slash.rotation = rotation
+		Slash.global_position += transform.x * 180
+		actionTimer = 3000
+	
+	if dashSlash == true:
+		velocity = transform.x * speed
+		speed -= 850 * delta
+
+	if attackTimer <= 0:
+		currentComboAttack += 1
+		attackTimer = 300
+		actionTimer = 1000
+		newAttack = true
+		dashSlash = false
+		velocity = Vector2(0,0)
+	
+	look_at(Player.position)
+	timers(delta)
 
 func cooldown(delta):
 	pass
+
+func timers(delta):
+	actionTimer -= 60 * delta
+	actionTimer2 -= 60 * delta
+	attackTimer -= 60 * delta
+	animTimer -= 60 * delta

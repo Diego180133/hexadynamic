@@ -12,3 +12,4 @@ func _ready():
 		var point = Vector2(x, y)
 		points.append(point)
 		$".".polygon = points
+		

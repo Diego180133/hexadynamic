@@ -33,6 +33,7 @@ player=""
 boss=""
 enemyProjectile=""
 WallCollide=""
+removableProjectile=""
 
 [input]
 

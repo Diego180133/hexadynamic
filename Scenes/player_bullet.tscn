@@ -1,0 +1,50 @@
+[gd_scene load_steps=10 format=3 uid="uid://cmb750g7qtc1x"]
+
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_0gcx8"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_8snbe"]
+[ext_resource type="Texture2D" uid="uid://dx6fxl1ltoyu" path="res://Assets/Projectiles/ColorlessBullet.png" id="2_x8hrl"]
+[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_b2dfx"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vcmgc"]
+resource_local_to_scene = true
+shader = ExtResource("2_8snbe")
+shader_parameter/colorShade = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_51c7c"]
+atlas = ExtResource("2_x8hrl")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xfe78"]
+atlas = ExtResource("2_x8hrl")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cp7ha"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_51c7c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xfe78")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_075hr"]
+radius = 14.0
+
+[node name="Bullet" type="Area2D"]
+position = Vector2(-20, -20)
+script = ExtResource("1_0gcx8")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_vcmgc")
+sprite_frames = SubResource("SpriteFrames_cp7ha")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
+visible = false
+shape = SubResource("CircleShape2D_075hr")
+script = ExtResource("4_b2dfx")

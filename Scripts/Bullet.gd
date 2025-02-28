@@ -3,7 +3,7 @@ extends Area2D
 @onready var Sprite = $AnimatedSprite2D
 var speed = 1000
 var rotSpeed := 0.5
-var rSpeed := 5
+var rSpeed := 8
 var initPos: Vector2
 var radius := 0.0
 var d := 0.0
@@ -33,6 +33,11 @@ func _physics_process(delta):
 		
 		1:
 			add_to_group("enemyProjectile")
+			
+		2:
+			add_to_group("playerProjectile")
+			add_to_group("WallCollide")
+			colorShade = Vector4(1,1,0,0.4)
 		3:
 			add_to_group("WallCollide")
 			add_to_group("enemyProjectile")
@@ -69,7 +74,7 @@ func _physics_process(delta):
 		#linear speed up
 		4:
 			position += transform.x * speed * delta
-			speed += 120 * delta
+			speed += 180 * delta
 			
 		#Spawns more bullets
 		5:
@@ -77,8 +82,7 @@ func _physics_process(delta):
 			position += transform.x * speed * delta
 			if collided_with_wall == true:
 				for i in 24:
-					var newBullet = (load("res://Scenes/bullet.tscn") as PackedScene).instantiate()
-					get_tree().current_scene.add_child(newBullet)
+					var newBullet = (load("res://Scenes/enemy_bullet.tscn") as PackedScene).instantiate()
 					newBullet.bulletGroup = 1
 					newBullet.bulletType = 2
 					newBullet.initPos = global_position
@@ -86,6 +90,7 @@ func _physics_process(delta):
 					newBullet.displace = (PI*i)/12
 					newBullet.rotSpeed = 0.25
 					newBullet.rSpeed = 8
+					get_tree().current_scene.add_child(newBullet)
 				var Explosion = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
 				get_tree().current_scene.add_child(Explosion)
 				Explosion.global_position = global_position

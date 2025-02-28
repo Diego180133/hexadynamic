@@ -5,6 +5,5 @@ func _ready():
 	area_entered.connect(_area_entered)
 
 func _area_entered(area):
-	if area.is_in_group("WallCollide"):
-		area.collided_with_wall = true
-		print("wall collision")
+	if area.is_in_group("enemyProjectile") or area.is_in_group("playerProjectile"):
+		area.queue_free()

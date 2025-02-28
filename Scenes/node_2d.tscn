@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://cklnhwj3m7fci"]
 
-[ext_resource type="Script" path="res://Scripts/wall_hitbox.gd" id="1_2okoy"]
+[ext_resource type="Script" path="res://Scripts/Outer_wall_hitbox.gd" id="1_2okoy"]
 [ext_resource type="Script" path="res://Scripts/Assasin.gd" id="1_6uqwv"]
 [ext_resource type="Script" path="res://Scripts/boss_hitbox.gd" id="1_mufdk"]
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_mx5lq"]

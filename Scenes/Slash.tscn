@@ -1,0 +1,92 @@
+[gd_scene load_steps=13 format=3 uid="uid://b4gnysnewpmvg"]
+
+[ext_resource type="Script" path="res://Scripts/slash.gd" id="1_4tktv"]
+[ext_resource type="Texture2D" uid="uid://m38gfff01b1m" path="res://Assets/Projectiles/Slash.png" id="1_j63b7"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="3_ohjd7"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4p2jy"]
+shader = ExtResource("3_ohjd7")
+shader_parameter/colorShade = Color(0.898039, 0, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8ke18"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ni1rp"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u2p0t"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mkgks"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85ink"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6o34u"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qj1tt"]
+atlas = ExtResource("1_j63b7")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ual3j"]
+resource_local_to_scene = true
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8ke18")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ni1rp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u2p0t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mkgks")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85ink")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6o34u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qj1tt")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
+[node name="Area2D" type="Area2D" groups=["enemyProjectile"]]
+scale = Vector2(10, 10)
+script = ExtResource("1_4tktv")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_4p2jy")
+sprite_frames = SubResource("SpriteFrames_ual3j")
+frame = 7
+frame_progress = 1.0
+flip_h = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." groups=["enemyProjectile"]]
+polygon = PackedVector2Array(-8, -12, 3.6, -8.6, 6.6, -2, 2.8, 7.2, -8, 10)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

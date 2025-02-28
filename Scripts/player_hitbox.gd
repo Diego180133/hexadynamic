@@ -32,7 +32,8 @@ func _area_entered(area):
 			_bullet_damage()
 			iFrames = 60
 			_flash()
-		area.queue_free()
+		if area.is_in_group("removableProjectile"):
+			area.queue_free()
 
 func _boss_damage():
 	get_parent().health -= 50
