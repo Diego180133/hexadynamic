@@ -1,0 +1,53 @@
+[gd_scene load_steps=10 format=3 uid="uid://cpgtgbf3cvl6s"]
+
+[ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_1qc6n"]
+[ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_q4a1v"]
+[ext_resource type="Texture2D" uid="uid://olemc2ca7bx0" path="res://Assets/Projectiles/ColorlessDagger.png" id="3_bvi5n"]
+[ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_va7yg"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vcmgc"]
+resource_local_to_scene = true
+shader = ExtResource("2_q4a1v")
+shader_parameter/colorShade = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5m6rd"]
+atlas = ExtResource("3_bvi5n")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vwsdr"]
+atlas = ExtResource("3_bvi5n")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_grtap"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5m6rd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vwsdr")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fso8x"]
+size = Vector2(26, 10)
+
+[node name="Dagger" type="Area2D" groups=["enemyProjectile", "removableProjectile"]]
+position = Vector2(-20, -20)
+scale = Vector2(1.5, 1.5)
+script = ExtResource("1_1qc6n")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_vcmgc")
+sprite_frames = SubResource("SpriteFrames_grtap")
+frame = 1
+frame_progress = 0.229394
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_fso8x")
+script = ExtResource("4_va7yg")

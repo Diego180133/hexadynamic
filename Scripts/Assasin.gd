@@ -5,6 +5,7 @@ extends CharacterBody2D
 @onready var BossPolygon = $Polygon2DOutline/Polygon2D
 @onready var BossPolygonOutline = $Polygon2DOutline
 @export var Bullet: PackedScene
+@export var Dagger: PackedScene
 @export var Health = 10000
 var angle := 0.0
 var attackAmount := 5
@@ -49,13 +50,15 @@ func _process(delta):
 			Attack4(delta)
 		5:
 			Attack5(delta)
+		6:
+			Attack6(delta)
 
 func comboBuild():
 	ComboString = []
 	currentComboAttack = 0
 	attackAmount = RandomNumberGenerator.new().randi_range(4,6)
 	for i in range(attackAmount):
-		ComboString.append(RandomNumberGenerator.new().randi_range(1,5))
+		ComboString.append(RandomNumberGenerator.new().randi_range(1,6))
 	ComboString[attackAmount - 1] = 11
 	print(ComboString)
 	attackTimer = 300
@@ -79,14 +82,14 @@ func Attack1(delta):
 		
 	if actionTimer <= 0:
 		angle += PI / 24
-		for i in 20:
+		for i in 18:
 			var newBullet = Bullet.instantiate() as Node2D
 			get_tree().current_scene.add_child(newBullet)
 			newBullet.bulletGroup = 1
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
-			newBullet.displace = (PI*i)/10
+			newBullet.displace = (PI*i)/9
 			newBullet.rotSpeed = 0.25
 				
 				
@@ -96,7 +99,7 @@ func Attack1(delta):
 			newBullet.bulletType = 2
 			newBullet.initPos = global_position
 			newBullet.angle = angle
-			newBullet.displace = (PI*i)/10
+			newBullet.displace = (PI*i)/9
 			newBullet.rotSpeed = -0.25
 		actionTimer = 1000
 			
@@ -323,6 +326,47 @@ func Attack5(delta):
 		velocity = Vector2(0,0)
 	
 	look_at(Player.position)
+	timers(delta)
+
+func Attack6(delta):
+	if newAttack == true:
+		attackTimer = 80
+		actionTimer = 30
+		speed = 0
+		loop = 1
+		newAttack = false
+	
+	look_at(Player.position)
+	
+	if actionTimer <= 0:
+		spawnRotation = -42
+		for i in 7:
+			var newDagger = Dagger.instantiate() as Node2D
+			get_tree().current_scene.add_child(newDagger)
+			newDagger.bulletGroup = 3
+			newDagger.bulletType = 1
+			newDagger.speed = 550
+			newDagger.global_position = global_position
+			newDagger.look_at(Player.global_position)
+			newDagger.spawnRotation = spawnRotation
+			newDagger.rotate(deg_to_rad(newDagger.spawnRotation))
+			spawnRotation += 12
+			speed = 400
+			actionTimer = 30
+	
+	if speed > 0:
+		speed -= 600 * delta
+	else:
+		speed = 0
+		
+	velocity = transform.x * speed
+	
+	if attackTimer <= 0:
+		currentComboAttack += 1
+		attackTimer = 300
+		newAttack = true
+		actionTimer = 1000
+	
 	timers(delta)
 
 func cooldown(delta):
