@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var HealthBar = $"../BossHealth"
+@onready var HealthBar = $Node/BossHealth
 @onready var Player = $"../Player"
 @onready var BossPolygon = $Polygon2DOutline/Polygon2D
 @onready var BossPolygonOutline = $Polygon2DOutline
@@ -24,7 +24,7 @@ var intensity := 0.0
 var loop := 0
 var spawnRotation = 90
 var speed = 0
-var relocatePos:Vector2
+var predictPos:Vector2
 var newAttackAction = true
 
 func _ready():
@@ -124,17 +124,18 @@ func Attack2(delta):
 	if actionTimer <= 0:
 		spawnRotation = 90
 		for i in 2:
-			var newBullet = Bullet.instantiate() as Node2D
-			get_tree().current_scene.add_child(newBullet)
-			newBullet.bulletGroup = 3
-			newBullet.bulletType = 3
-			newBullet.speed = 400
-			newBullet.spawnRotation = spawnRotation
-			newBullet.velocity = newBullet.speed * global_position.direction_to(Player.global_position)
-			newBullet.velocity = newBullet.velocity.rotated(deg_to_rad(newBullet.spawnRotation))
+			var newDagger = Dagger.instantiate() as Node2D
+			newDagger.dark = true
+			get_tree().current_scene.add_child(newDagger)
+			newDagger.bulletGroup = 3
+			newDagger.bulletType = 3
+			newDagger.speed = 400
+			newDagger.spawnRotation = spawnRotation
+			newDagger.velocity = newDagger.speed * global_position.direction_to(Player.global_position)
+			newDagger.velocity = newDagger.velocity.rotated(deg_to_rad(newDagger.spawnRotation))
 			spawnRotation += 180
-			newBullet.global_position = global_position
-			newBullet.timer = 450
+			newDagger.global_position = global_position
+			newDagger.timer = 300
 		actionTimer = 1000
 		
 	if attackTimer <= 0:
@@ -148,9 +149,10 @@ func Attack2(delta):
 
 func Attack3(delta):
 	if newAttack == true:
-		attackTimer = 90
-		actionTimer = 90
-		animTimer = 90
+		attackTimer = 70
+		actionTimer = 70
+		actionTimer2 = 70
+		animTimer = 70
 		rotationStorage = 0
 		newAttack = false
 		loop = 1
@@ -161,26 +163,32 @@ func Attack3(delta):
 	if animTimer > 60:
 		look_at(Player.position)
 	
-	if animTimer > 0 && animTimer < 60:
-		rotationStorage += deg_to_rad((360/60) * 60 * delta)
+	if animTimer > 0 && animTimer < 45:
+		rotationStorage += deg_to_rad((360/45) * 60 * delta)
 		look_at(Player.position)
 		rotate(rotationStorage)
 	
+	if actionTimer2 <= 10:
+		predictPos = Player.position + ((Player.input * Player.accel * global_position.distance_to(Player.position)) / 1350)
+		actionTimer2 = 1000
+		
 	if actionTimer <= 0:
 		var newBullet = Bullet.instantiate() as Node2D
 		newBullet.dark = true
 		get_tree().current_scene.add_child(newBullet)
+		newBullet.damage = 50
 		newBullet.bulletGroup = 3
 		newBullet.bulletType = 5
 		newBullet.global_position = global_position
-		newBullet.look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed))/3)
-		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (newBullet.speed)))
+		newBullet.look_at(predictPos)
+		look_at(predictPos)
 		actionTimer = 10000
 		
 	if attackTimer <= 0:
 		if loop > 0:
-			attackTimer = 120
+			attackTimer = 70
 			actionTimer = 60
+			actionTimer2 = 60
 			animTimer = 60
 			loop -= 1
 		else:
@@ -201,6 +209,7 @@ func Attack4(delta):
 		actionTimer2 = 92
 		newAttack = false
 		slowDown = false
+		velocity = Vector2(0,0)
 		bulletRotation = 90
 		var Particles = (load("res://Scenes/wave_particle.tscn") as PackedScene).instantiate()
 		Particles.waitTime = 1.5
@@ -213,7 +222,7 @@ func Attack4(delta):
 	if actionTimer > 10 && actionTimer < 100:
 		intensity += (0.8 * delta)
 		BossPolygon.material.set_shader_parameter("intensity", intensity)
-		look_at(Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (1250)))
+		look_at(Player.position + ((Player.input * Player.accel * global_position.distance_to(Player.position)) / (1250)))
 		
 	
 	if actionTimer <= 0:
@@ -277,14 +286,14 @@ func Attack5(delta):
 			RelocateParticles.initial_velocity_min = -500
 			RelocateParticles.initial_velocity_max = -100
 			get_tree().current_scene.add_child(RelocateParticles)
-			relocatePos = Player.position + ((Player.velocity * global_position.distance_to(Player.position)) / (900))
-			RelocateParticles.global_position = relocatePos
+			predictPos = Player.position + ((Player.input * Player.accel * global_position.distance_to(Player.position)) / (900))
+			RelocateParticles.global_position = predictPos
 			newAttackAction = false
 		
 		
 	if actionTimer2 <= 0:
 		actionTimer2 = 10000
-		global_position = relocatePos
+		global_position = predictPos
 		var RelocateParticles2 = (load("res://Scenes/ExplosionParticles.tscn") as PackedScene).instantiate()
 		get_tree().current_scene.add_child(RelocateParticles2)
 		RelocateParticles2.color = Color(1,0,1,1)
@@ -293,7 +302,17 @@ func Attack5(delta):
 		RelocateParticles2.initial_velocity_max = 600
 		RelocateParticles2.explosiveness = 1
 		RelocateParticles2.lifetime = 1
-		RelocateParticles2.global_position = relocatePos
+		RelocateParticles2.global_position = predictPos
+		
+		for i in 12:
+			var newBullet = Bullet.instantiate() as Node2D
+			get_tree().current_scene.add_child(newBullet)
+			newBullet.bulletGroup = 3
+			newBullet.bulletType = 2
+			newBullet.initPos = global_position
+			newBullet.angle = angle
+			newBullet.displace = (PI*i)/6
+			newBullet.rotSpeed = 0
 		
 	if actionTimer2 > 60:
 		BossPolygonOutline.color.a += 15 * delta
@@ -339,18 +358,18 @@ func Attack6(delta):
 	look_at(Player.position)
 	
 	if actionTimer <= 0:
-		spawnRotation = -42
+		spawnRotation = -45
 		for i in 7:
 			var newDagger = Dagger.instantiate() as Node2D
 			get_tree().current_scene.add_child(newDagger)
 			newDagger.bulletGroup = 3
 			newDagger.bulletType = 1
-			newDagger.speed = 550
+			newDagger.speed = 450
 			newDagger.global_position = global_position
 			newDagger.look_at(Player.global_position)
 			newDagger.spawnRotation = spawnRotation
 			newDagger.rotate(deg_to_rad(newDagger.spawnRotation))
-			spawnRotation += 12
+			spawnRotation += 15
 			speed = 400
 			actionTimer = 30
 	

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://oc1n0351qpud"]
+
+[ext_resource type="Script" path="res://Scenes/menu_test.gd" id="1_dk4ub"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_e2pvf"]
+font_size = 50
+outline_size = 10
+outline_color = Color(0.533559, 0.568805, 0, 1)
+
+[node name="MenuTest" type="Node2D"]
+script = ExtResource("1_dk4ub")
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="HUD"]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "SELECT BOSS"
+label_settings = SubResource("LabelSettings_e2pvf")

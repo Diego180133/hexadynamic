@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cs5oiq1x3k0wj"]
+[gd_scene load_steps=28 format=3 uid="uid://cs5oiq1x3k0wj"]
 
 [ext_resource type="Script" path="res://Scripts/Outer_wall_hitbox.gd" id="1_8ypco"]
 [ext_resource type="Script" path="res://Scripts/wall_hitbox.gd" id="2_ei7k8"]
@@ -16,6 +16,7 @@
 [ext_resource type="Shader" path="res://PlayerShader.gdshader" id="11_cqfj8"]
 [ext_resource type="Script" path="res://Scripts/health_bar.gd" id="11_qgxxr"]
 [ext_resource type="Script" path="res://Scripts/Energy.gd" id="12_0j8vk"]
+[ext_resource type="Script" path="res://class_1.gd" id="15_psnfi"]
 
 [sub_resource type="GDScript" id="GDScript_rpclx"]
 script/source = "extends Node2D
@@ -38,6 +39,12 @@ shader_parameter/flash_opacity = null
 shader_parameter/attack_color = Color(1, 0, 1, 1)
 shader_parameter/intensity = null
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iscer"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8t4bv"]
+bg_color = Color(1, 0, 0, 1)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_l5bmb"]
 shader = ExtResource("11_cqfj8")
 shader_parameter/flash_color = Color(0, 0, 0, 1)
@@ -54,12 +61,6 @@ bg_color = Color(0.41598, 0.41598, 0.41598, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_05ov3"]
 bg_color = Color(0, 1, 0.278431, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iscer"]
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8t4bv"]
-bg_color = Color(1, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_37jon"]
 bg_color = Color(6.54578e-06, 0.644681, 0.917506, 1)
@@ -141,11 +142,24 @@ script = ExtResource("5_1do8l")
 n = 3
 r = 50
 
+[node name="Node" type="Node" parent="Boss"]
+
+[node name="BossHealth" type="ProgressBar" parent="Boss/Node"]
+offset_left = 570.0
+offset_top = 980.0
+offset_right = 1350.0
+offset_bottom = 996.0
+theme_override_styles/background = SubResource("StyleBoxFlat_iscer")
+theme_override_styles/fill = SubResource("StyleBoxFlat_8t4bv")
+max_value = 10000.0
+value = 100.0
+show_percentage = false
+script = ExtResource("11_qgxxr")
+
 [node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
 position = Vector2(1400, 540)
 motion_mode = 1
 script = ExtResource("7_htyhn")
-Attack = ExtResource("10_is458")
 
 [node name="PlayerBorder" type="Polygon2D" parent="Player"]
 position = Vector2(-15, -15)
@@ -175,19 +189,13 @@ shape = SubResource("RectangleShape2D_hy8fw")
 texture_filter = 1
 texture = ExtResource("10_l1x1p")
 
-[node name="Wall1" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 60, 50, 60)
+[node name="Class1" type="Node2D" parent="Player"]
+script = ExtResource("15_psnfi")
+Attack = ExtResource("10_is458")
 
-[node name="Wall2" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(1860, 50, 1870, 50, 1870, 1030, 1860, 1030)
+[node name="Node" type="Node" parent="Player"]
 
-[node name="Wall3" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(50, 50, 60, 50, 60, 1030, 50, 1030)
-
-[node name="Wall4" type="Polygon2D" parent="."]
-polygon = PackedVector2Array(50, 1020, 1870, 1020, 1870, 1030, 50, 1030)
-
-[node name="PlayerHealth" type="ProgressBar" parent="."]
+[node name="PlayerHealth" type="ProgressBar" parent="Player/Node"]
 offset_left = 72.0
 offset_top = 21.0
 offset_right = 472.0
@@ -198,19 +206,7 @@ value = 100.0
 show_percentage = false
 script = ExtResource("11_qgxxr")
 
-[node name="BossHealth" type="ProgressBar" parent="."]
-offset_left = 570.0
-offset_top = 980.0
-offset_right = 1350.0
-offset_bottom = 996.0
-theme_override_styles/background = SubResource("StyleBoxFlat_iscer")
-theme_override_styles/fill = SubResource("StyleBoxFlat_8t4bv")
-max_value = 10000.0
-value = 100.0
-show_percentage = false
-script = ExtResource("11_qgxxr")
-
-[node name="ENBar" type="ProgressBar" parent="."]
+[node name="ENBar" type="ProgressBar" parent="Player/Node"]
 offset_left = 501.0
 offset_top = 21.0
 offset_right = 901.0
@@ -222,16 +218,28 @@ value = 100.0
 show_percentage = false
 script = ExtResource("12_0j8vk")
 
-[node name="Polygon2D" type="Polygon2D" parent="ENBar"]
+[node name="Polygon2D" type="Polygon2D" parent="Player/Node/ENBar"]
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
 
-[node name="Polygon2D2" type="Polygon2D" parent="ENBar"]
+[node name="Polygon2D2" type="Polygon2D" parent="Player/Node/ENBar"]
 position = Vector2(100, 0)
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
 
-[node name="Polygon2D3" type="Polygon2D" parent="ENBar"]
+[node name="Polygon2D3" type="Polygon2D" parent="Player/Node/ENBar"]
 position = Vector2(200, 0)
 color = Color(0, 0, 0, 1)
 polygon = PackedVector2Array(99, 0, 101, 0, 101, 12, 99, 12)
+
+[node name="Wall1" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 50, 1870, 50, 1870, 60, 50, 60)
+
+[node name="Wall2" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(1860, 50, 1870, 50, 1870, 1030, 1860, 1030)
+
+[node name="Wall3" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 50, 60, 50, 60, 1030, 50, 1030)
+
+[node name="Wall4" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(50, 1020, 1870, 1020, 1870, 1030, 50, 1030)

@@ -5,6 +5,7 @@ var iFrames = 0
 @onready var Hitbox = $"../HitboxSprite"
 var flashing = false
 var flashOpacity := 0.0
+var damage = 0
 func _ready():
 	area_entered.connect(_area_entered)
 	
@@ -22,6 +23,7 @@ func _process(delta):
 			flashOpacity = 0
 	
 func _area_entered(area):
+	damage = area.damage
 	if area.is_in_group("boss") and (iFrames == 0):
 		_boss_damage()
 		_flash()
@@ -39,7 +41,7 @@ func _boss_damage():
 	get_parent().health -= 50
 	
 func _bullet_damage():
-	get_parent().health -= 35
+	get_parent().health -= damage
 	
 func _flash():
 	flashing = true

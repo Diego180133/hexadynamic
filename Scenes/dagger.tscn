@@ -1,14 +1,23 @@
-[gd_scene load_steps=10 format=3 uid="uid://cpgtgbf3cvl6s"]
+[gd_scene load_steps=13 format=3 uid="uid://cpgtgbf3cvl6s"]
 
 [ext_resource type="Script" path="res://Scripts/Bullet.gd" id="1_1qc6n"]
 [ext_resource type="Shader" path="res://BulletShader.gdshader" id="2_q4a1v"]
 [ext_resource type="Texture2D" uid="uid://olemc2ca7bx0" path="res://Assets/Projectiles/ColorlessDagger.png" id="3_bvi5n"]
+[ext_resource type="Texture2D" uid="uid://lypt6bpf3ew2" path="res://Assets/Projectiles/DarkDagger.png" id="3_f6unc"]
 [ext_resource type="Script" path="res://Scripts/BulletTimer.gd" id="4_va7yg"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vcmgc"]
 resource_local_to_scene = true
 shader = ExtResource("2_q4a1v")
 shader_parameter/colorShade = Color(1, 1, 1, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wqrur"]
+atlas = ExtResource("3_f6unc")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ny1tl"]
+atlas = ExtResource("3_f6unc")
+region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5m6rd"]
 atlas = ExtResource("3_bvi5n")
@@ -20,6 +29,17 @@ region = Rect2(0, 32, 32, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_grtap"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wqrur")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ny1tl")
+}],
+"loop": true,
+"name": &"dark_purple",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5m6rd")
@@ -44,8 +64,7 @@ script = ExtResource("1_1qc6n")
 texture_filter = 1
 material = SubResource("ShaderMaterial_vcmgc")
 sprite_frames = SubResource("SpriteFrames_grtap")
-frame = 1
-frame_progress = 0.229394
+animation = &"dark_purple"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=["enemyProjectile"]]
 position = Vector2(1, 0)

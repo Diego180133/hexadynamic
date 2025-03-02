@@ -4,6 +4,7 @@ var flashing = false
 var flashOpacity = 0.0
 @onready var BossPolygon = $"../Polygon2DOutline/Polygon2D"
 @onready var Boss = $".."
+var damage = 0
 var collided_with_wall = false
 
 func _ready():
@@ -12,6 +13,7 @@ func _ready():
 func _area_entered(area):
 	if area.is_in_group("playerProjectile"):
 		area.queue_free()
+		damage = area.damage
 		_attack_damage()
 		_flash()
 		
@@ -32,7 +34,7 @@ func _process(delta):
 		Boss.set_collision_layer_value(2,true)
 	
 func _attack_damage():
-	get_parent().Health -= 20
+	get_parent().Health -= damage
 	get_parent()._Health_Update()
 
 func _flash():

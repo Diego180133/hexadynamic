@@ -1,9 +1,8 @@
 extends CharacterBody2D
 
-@onready var HealthBar = $"../PlayerHealth"
-@onready var ENBar = $"../ENBar"
+@onready var HealthBar = $Node/PlayerHealth
+@onready var ENBar = $Node/ENBar
 
-@export var Attack: PackedScene
 @export var MaxHealth = 100
 @export var energy = 400
 @export var energyRegen = 45
@@ -15,7 +14,6 @@ var MaxEnergy = 400
 var MaxSpeed = 400
 var input = Vector2(0,0)
 var dashCooldown = 0
-var attackCooldown = 0
 
 
 func _ready():
@@ -28,7 +26,6 @@ func _physics_process(delta):
 	
 func _process(delta):
 	
-	playerAttack(delta)
 	_Health_Update()
 	
 	if energy < MaxEnergy:
@@ -97,22 +94,6 @@ func PlayerMovement(delta):
 		velocity = velocity.limit_length(MaxSpeed)
 	
 	move_and_slide()
-
-func playerAttack(delta):
-	if Input.is_action_pressed("Attack") and (attackCooldown == 0):
-		var newAttack = Attack.instantiate() as Node2D
-		get_tree().current_scene.add_child(newAttack)
-		newAttack.bulletGroup = 2
-		newAttack.bulletType = 1
-		newAttack.speed = 1000
-		newAttack.global_position = global_position
-		newAttack.look_at(get_global_mouse_position())
-		attackCooldown = 10
-	
-	if attackCooldown > 0:
-		attackCooldown -= 60 * delta
-	else:
-		attackCooldown = 0
 
 func _Health_Update():
 	HealthBar.health = health

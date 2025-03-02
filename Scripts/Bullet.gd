@@ -1,6 +1,8 @@
 extends Area2D
 
 @onready var Sprite = $AnimatedSprite2D
+@onready var Player = $"../Player"
+var damage = 35
 var speed = 1000
 var rotSpeed := 0.5
 var rSpeed := 8
@@ -11,7 +13,7 @@ var displace := 0.0
 var angle := 0.0
 var bulletType := 0
 var velocity:Vector2 
-var torsion_speed:= 0.04
+var torsion_speed:= 0.06
 var timer = 100
 var colorShade = Vector4(1,0,1,0.4)
 var bulletGroup = 0
@@ -63,6 +65,7 @@ func _physics_process(delta):
 			
 		#tracking
 		3:
+			look_at(Player.position)
 			var playerPosition:Vector2 = get_tree().get_first_node_in_group("player").position
 			var vectorToPlayer:Vector2 = (playerPosition - position).normalized()
 			velocity = velocity.rotated(torsion_speed * velocity.angle_to(vectorToPlayer))
